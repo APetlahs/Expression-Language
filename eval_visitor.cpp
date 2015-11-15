@@ -15,6 +15,11 @@ ASTNode *EvalVisitor::getSymbol(const string &sym) {
     return NULL;
 }
 
+int EvalVisitor::evalExpr(ExprNode *expr) {
+    expr->accept(this);
+    return this->curVal;
+}
+
 void EvalVisitor::visit(ast::ASTNode *node) {
     node->accept(this);
 }
@@ -101,7 +106,15 @@ void EvalVisitor::visit(StmtNode *node) {
 }
 
 void EvalVisitor::visit(DefNode *node) {
-    cout << "a def node!" << endl;
+    function newFunc;
+    newFunc.args = node->args;
+    newFunc.body = node->body;
+    const std::string sym = *(node->id->id);
+    this->funcDefs[sym] = newFunc;
+}
+
+void EvalVisitor::visit(ParamsNode *node) {
+    cout << "a param node!" << endl;
 }
 
 void EvalVisitor::visit(ArgsNode *node) {
@@ -109,7 +122,44 @@ void EvalVisitor::visit(ArgsNode *node) {
 }
 
 void EvalVisitor::visit(CallNode *node) {
-    cout << "a call node!" << endl;
+    std::vector<ASTNode *> tempValues;
+    std::map<std::string, ASTNode*> prevScope;
+
+    if (this->funcDefs.find(*(node->id->id)) == this->funcDefs.end()) {
+        std::cout << "function '" << *(node->id->id)
+                  <<"' has not been defined" << std::endl;
+        return;
+    }
+
+    function func = this->funcDefs[*(node->id->id)];
+    if (func.args->args.size() != node->args->args.size()) {
+        std::cout << "function '" << *(node->id->id) <<"' expected "
+                  << func.args->args.size() << " arguments, got "
+                  << node->args->args.size()
+                  << " instead." << std::endl;
+        return;
+    }
+
+    prevScope = this->symbols;
+    for (unsigned int i = 0; i < node->args->args.size(); ++i)
+    {
+        const std::string sym = *(func.args->args[i]->id);
+
+        // evaluate argument before passing to function
+        node->args->args[i]->accept(this);
+        IntNode *argValue = new IntNode(this->curVal);
+        tempValues.push_back(argValue);
+        addSymbol(sym, argValue);
+    }
+
+    // delete temporary values
+    for (std::vector<ASTNode*>::iterator i = tempValues.begin(); i != tempValues.end(); ++i)
+    {
+        (*i)->deleteAll();
+    }
+
+    func.body->accept(this);
+    this->symbols = prevScope;
 }
 
 void EvalVisitor::visit(AssignNode *node) {

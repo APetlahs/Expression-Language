@@ -80,12 +80,20 @@ public:
         ACCEPT();
 };
 
-class ArgsNode: public ASTNode {
+class ParamsNode: public ASTNode {
 public:
         std::vector<IdNode*> args;
-
-        ArgsNode(): args() {}
+        ParamsNode(): args() {}
         void push(IdNode *node) { args.push_back(node); }
+        virtual void deleteAll();
+        ACCEPT();
+};
+
+class ArgsNode: public ASTNode {
+public:
+        std::vector<ExprNode*> args;
+        ArgsNode(): args() {}
+        void push(ExprNode *node) { args.push_back(node); }
         virtual void deleteAll();
         ACCEPT();
 };
@@ -102,10 +110,10 @@ public:
 class DefNode: public ASTNode {
 public:
         IdNode *id;
-        ArgsNode *args;
+        ParamsNode *args;
         ExprNode *body;
 
-        DefNode(IdNode *id, ArgsNode *args, ExprNode *body):
+        DefNode(IdNode *id, ParamsNode *args, ExprNode *body):
                 id(id), args(args), body(body) {}
         virtual void deleteAll() {
             id->deleteAll(); args->deleteAll(); body->deleteAll();

@@ -21,6 +21,7 @@ extern void yyerror(const char *s);
 
 %%
 
+"let"                   return LET;
 [a-zA-Z_][a-zA-Z_0-9]*  SAVE_TOKEN; return IDENT;
 [0-9]+                  yylval.ival = atoi(yytext); return INT;
 

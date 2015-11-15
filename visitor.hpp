@@ -13,6 +13,7 @@ class StmtNode;
 class DefNode;
 class CallNode;
 class AssignNode;
+class ParamsNode;
 class ArgsNode;
 class UniExprNode;
 class BinExprNode;
@@ -30,6 +31,7 @@ public:
     virtual void visit(ast::DefNode *node);
     virtual void visit(ast::CallNode *node);
     virtual void visit(ast::AssignNode *node);
+    virtual void visit(ast::ParamsNode *node);
     virtual void visit(ast::ArgsNode *node);
     virtual void visit(ast::UniExprNode *node);
     virtual void visit(ast::BinExprNode *node);

@@ -6,17 +6,25 @@
 
 namespace ast {
 
+// struct to store function definitions
+typedef struct {
+    ast::ParamsNode* args;
+    ast::ExprNode* body;
+} function;
+
 class EvalVisitor: public ast::Visitor {
 private:
     std::map<std::string , ASTNode*> symbols;
+    std::map<std::string , function> funcDefs;
     int curVal;
     bool isPrintable;
 
 public:
 
-    EvalVisitor(): symbols(), curVal(0), isPrintable(false) {}
+    EvalVisitor(): symbols(), funcDefs(), curVal(0), isPrintable(false) {}
     void addSymbol(const std::string &sym, ASTNode *val);
     ast::ASTNode *getSymbol(const std::string &sym);
+    int evalExpr(ExprNode *expr);
 
     virtual void visit(ast::ASTNode *node);
     virtual void visit(ast::ModuleNode *node);
@@ -25,6 +33,7 @@ public:
     virtual void visit(ast::DefNode *node);
     virtual void visit(ast::CallNode *node);
     virtual void visit(ast::AssignNode *node);
+    virtual void visit(ast::ParamsNode *node);
     virtual void visit(ast::ArgsNode *node);
     virtual void visit(ast::UniExprNode *node);
     virtual void visit(ast::BinExprNode *node);

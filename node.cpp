@@ -10,8 +10,14 @@ void BlockNode::deleteAll() {
     }
 }
 
-void ArgsNode::deleteAll() {
+void ParamsNode::deleteAll() {
     for (vector<IdNode*>::iterator i = args.begin(); i != args.end(); ++i) {
+        (*i)->deleteAll();
+    }
+}
+
+void ArgsNode::deleteAll() {
+    for (vector<ExprNode*>::iterator i = args.begin(); i != args.end(); ++i) {
         (*i)->deleteAll();
     }
 }

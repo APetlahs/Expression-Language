@@ -51,9 +51,18 @@ void Visitor::visit(AssignNode *node) {
     node->expr->accept(this);
 }
 
+void Visitor::visit(ParamsNode *node) {
+    cout << "visiting a ParamsNode: " << node << endl;
+    for (vector<IdNode*>::iterator i = node->args.begin();
+        i != node->args.end(); ++i)
+    {
+        (*i)->accept(this);
+    }
+}
+
 void Visitor::visit(ArgsNode *node) {
     cout << "visiting a ArgsNode: " << node << endl;
-    for (vector<IdNode*>::iterator i = node->args.begin();
+    for (vector<ExprNode*>::iterator i = node->args.begin();
         i != node->args.end(); ++i)
     {
         (*i)->accept(this);

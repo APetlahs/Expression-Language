@@ -22,6 +22,7 @@
         ast::ExprNode *expr;
         ast::CallNode *call;
         ast::ArgsNode *args;
+        ast::ParamsNode *params;
         ast::DefNode *def;
         ast::BinExprNode *binExpr;
         ast::UniExprNode *uniExpr;
@@ -35,12 +36,14 @@
 %token <str> IDENT
 %token <ival> INT
 %token <token> END_OF_FILE
+%token LET
 
 %type <stmt> statement
 %type <expr> expr
 %type <uniExpr> uni_expr
 %type <binExpr> bin_expr
 %type <call> func_call
+%type <params> parameter_list parameter_loop
 %type <args> args_list args_loop
 %type <def> func_def
 %type <assign> assignment
@@ -70,7 +73,7 @@ statement:
         ;
 
 assignment:
-        IDENT '=' expr          { $$ = new AssignNode(new IdNode($1), $3); }
+        LET IDENT '=' expr      { $$ = new AssignNode(new IdNode($2), $4); }
         ;
 
 expr:
@@ -96,11 +99,21 @@ uni_expr:
         ;
 
 func_def:
-        IDENT '(' args_list ')'
-        '=' expr                { $$ = new DefNode(new IdNode($1), $3, $6); }
+        LET IDENT '(' parameter_list ')'
+        '=' expr                { $$ = new DefNode(new IdNode($2), $4, $7); }
 
 func_call:
         IDENT '(' args_list ')' { $$ = new CallNode(new IdNode($1), $3); }
+        ;
+
+parameter_list:
+        parameter_loop          { $$ = $1; }
+        | /* empty args */      { $$ = new ParamsNode(); }
+        ;
+
+parameter_loop:
+        IDENT                           { $$ = new ParamsNode(); $$->push(new IdNode($1)); }
+        | parameter_loop ',' IDENT      { $1->push(new IdNode($3)); $$ = $1; }
         ;
 
 args_list:
@@ -109,9 +122,10 @@ args_list:
         ;
 
 args_loop:
-        IDENT                   { $$ = new ArgsNode(); $$->push(new IdNode($1)); }
-        | args_loop ',' IDENT   { $1->push(new IdNode($3)); $$ = $1; }
+        expr                    { $$ = new ArgsNode(); $$->push($1); }
+        | args_loop ',' expr    { $1->push($3); $$ = $1; }
         ;
+
 
 end:
         end end_delimeter
