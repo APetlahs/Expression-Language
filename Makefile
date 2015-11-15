@@ -21,4 +21,4 @@ lexer.o: lexer.l
 .PHONY: clean
 
 clean:
-		rm -f ${OBJECTS} ${EXEC} ${DEPENDS}
+	rm -f ${OBJECTS} ${EXEC} ${DEPENDS} grammar.hpp grammar.cpp lexer.cpp
