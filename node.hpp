@@ -26,10 +26,10 @@ public:
         ACCEPT();
 };
 
-class IntNode: public ExprNode {
+class NumNode: public ExprNode {
 public:
-        int val;
-        IntNode(const int val): val(val) {}
+        double val;
+        NumNode(const double val): val(val) {}
         virtual void deleteAll() {}
         ACCEPT();
 };

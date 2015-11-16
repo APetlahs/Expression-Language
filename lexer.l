@@ -23,7 +23,8 @@ extern void yyerror(const char *s);
 
 "let"                   return LET;
 [a-zA-Z_][a-zA-Z_0-9]*  SAVE_TOKEN; return IDENT;
-[0-9]+                  yylval.ival = atoi(yytext); return INT;
+[0-9]+[.][0-9]+         yylval.num = atof(yytext); return FLOAT;
+[0-9]+                  yylval.num = atof(yytext); return INT;
 
 [-+*/,()\[\]|\{\}\&\%\$\^\=\n]  return *yytext;
 ([ \t]|[:blank:])       ; /* skip whitespace */

@@ -29,17 +29,17 @@
         ast::AssignNode *assign;
         ast::StmtNode *stmt;
         std::string *str;
-        int ival;
+        double num;
         int token;
 }
 
 %token <str> IDENT
-%token <ival> INT
+%token <num> INT FLOAT
 %token <token> END_OF_FILE
 %token LET
 
 %type <stmt> statement
-%type <expr> expr
+%type <expr> expr terminal
 %type <uniExpr> uni_expr
 %type <binExpr> bin_expr
 %type <call> func_call
@@ -76,9 +76,14 @@ assignment:
         LET IDENT '=' expr      { $$ = new AssignNode(new IdNode($2), $4); }
         ;
 
-expr:
-        INT                     { $$ = new IntNode($1); }
+terminal:
+        INT                     { $$ = new NumNode($1); }
+        | FLOAT                 { $$ = new NumNode($1); }
         | IDENT                 { $$ = new IdNode($1); }
+        ;
+
+expr:
+        terminal                { $$ = $1; }
         | func_call             { $$ = $1; }
         | bin_expr              { $$ = $1; }
         | uni_expr              { $$ = $1; }

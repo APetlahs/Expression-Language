@@ -16,7 +16,7 @@ class EvalVisitor: public ast::Visitor {
 private:
     std::map<std::string , ASTNode*> symbols;
     std::map<std::string , function> funcDefs;
-    int curVal;
+    double curVal;
     bool isPrintable;
 
 public:
@@ -24,7 +24,7 @@ public:
     EvalVisitor(): symbols(), funcDefs(), curVal(0), isPrintable(false) {}
     void addSymbol(const std::string &sym, ASTNode *val);
     ast::ASTNode *getSymbol(const std::string &sym);
-    int evalExpr(ExprNode *expr);
+    double evalExpr(ExprNode *expr);
 
     virtual void visit(ast::ASTNode *node);
     virtual void visit(ast::ModuleNode *node);
@@ -38,7 +38,7 @@ public:
     virtual void visit(ast::UniExprNode *node);
     virtual void visit(ast::BinExprNode *node);
     virtual void visit(ast::IdNode *node);
-    virtual void visit(ast::IntNode *node);
+    virtual void visit(ast::NumNode *node);
     virtual void visit(ast::ExprNode *node);
 };
 

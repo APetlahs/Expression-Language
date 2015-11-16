@@ -18,7 +18,7 @@ class ArgsNode;
 class UniExprNode;
 class BinExprNode;
 class IdNode;
-class IntNode;
+class NumNode;
 class ExprNode;
 
 class Visitor {
@@ -36,7 +36,7 @@ public:
     virtual void visit(ast::UniExprNode *node);
     virtual void visit(ast::BinExprNode *node);
     virtual void visit(ast::IdNode *node);
-    virtual void visit(ast::IntNode *node);
+    virtual void visit(ast::NumNode *node);
     virtual void visit(ast::ExprNode *node);
 };
 

@@ -15,7 +15,7 @@ ASTNode *EvalVisitor::getSymbol(const string &sym) {
     return NULL;
 }
 
-int EvalVisitor::evalExpr(ExprNode *expr) {
+double EvalVisitor::evalExpr(ExprNode *expr) {
     expr->accept(this);
     return this->curVal;
 }
@@ -31,8 +31,8 @@ void EvalVisitor::visit(ExprNode *node) {
 
 void EvalVisitor::visit(BinExprNode *node) {
     this->isPrintable = true;
-    int lhs;
-    int rhs;
+    double lhs;
+    double rhs;
     node->lhs->accept(this);
     lhs = this->curVal;
     node->rhs->accept(this);
@@ -60,7 +60,7 @@ void EvalVisitor::visit(BinExprNode *node) {
 
 void EvalVisitor::visit(UniExprNode *expr) {
     this->isPrintable = true;
-    int val;
+    double val;
     expr->expr->accept(this);
     val = this->curVal;
     switch( expr->op ) {
@@ -82,7 +82,7 @@ void EvalVisitor::visit(IdNode *id) {
     }
 }
 
-void EvalVisitor::visit(IntNode *node) {
+void EvalVisitor::visit(NumNode *node) {
     this->isPrintable = true;
     this->curVal = node->val;
 }
@@ -147,7 +147,7 @@ void EvalVisitor::visit(CallNode *node) {
 
         // evaluate argument before passing to function
         node->args->args[i]->accept(this);
-        IntNode *argValue = new IntNode(this->curVal);
+        NumNode *argValue = new NumNode(this->curVal);
         tempValues.push_back(argValue);
         addSymbol(sym, argValue);
     }

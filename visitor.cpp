@@ -87,8 +87,8 @@ void Visitor::visit(IdNode *node) {
     cout << "label: " << *(node->id) << endl;
 }
 
-void Visitor::visit(IntNode *node) {
-    cout << "visiting a IntNode: " << node << endl;
+void Visitor::visit(NumNode *node) {
+    cout << "visiting a NumNode: " << node << endl;
     cout << "value: " << node->val << endl;
 }
 
