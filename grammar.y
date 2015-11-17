@@ -59,11 +59,14 @@
 
 program:
         code_block end_file     { programNode = new ModuleNode($1); cout << "created a program node" << endl; YYACCEPT;}
+        | end_file              { programNode = new ModuleNode( new BlockNode() ); YYACCEPT; }
         ;
 
 code_block:
         statement               { $$ = new BlockNode(); $$->push($1); }
+        | end /* empty stmt*/   { $$ = new BlockNode(); }
         | code_block statement  { $1->push($2); }
+        | code_block end
         ;
 
 statement:
@@ -106,6 +109,7 @@ uni_expr:
 func_def:
         LET IDENT '(' parameter_list ')'
         '=' expr                { $$ = new DefNode(new IdNode($2), $4, $7); }
+        ;
 
 func_call:
         IDENT '(' args_list ')' { $$ = new CallNode(new IdNode($1), $3); }
@@ -133,14 +137,16 @@ args_loop:
 
 
 end:
-        end end_delimeter
-        | end_delimeter
+        end_delimeter
+        ;
 
 end_delimeter:
         '\n'
         | ';'
+        ;
 
 end_file:
         END_OF_FILE
+        ;
 
 %%
