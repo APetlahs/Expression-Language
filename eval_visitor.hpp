@@ -20,6 +20,7 @@ private:
     bool isPrintable;
 
 public:
+    bool error;
 
     EvalVisitor(): symbols(), funcDefs(), curVal(0), isPrintable(false) {}
     void addSymbol(const std::string &sym, ASTNode *val);

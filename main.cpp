@@ -10,13 +10,15 @@ extern int yyparse();
 
 int main(int argc, char **argv) {
     yyparse();
-    std::cout << programNode << std::endl;
     if (!programNode) {
-        return 0;
+        return 1;
     }
     EvalVisitor v;
     programNode->accept(&v);
+    bool error = v.error;
     programNode->deleteAll();
     delete programNode;
+
+    if (error) return 1;
     return 0;
 }

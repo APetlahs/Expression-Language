@@ -58,7 +58,7 @@
 %%
 
 program:
-        code_block end_file     { programNode = new ModuleNode($1); cout << "created a program node" << endl; YYACCEPT;}
+        code_block end_file     { programNode = new ModuleNode($1); YYACCEPT; }
         | end_file              { programNode = new ModuleNode( new BlockNode() ); YYACCEPT; }
         ;
 

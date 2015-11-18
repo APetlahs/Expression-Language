@@ -76,7 +76,8 @@ void EvalVisitor::visit(IdNode *id) {
     this->isPrintable = true;
     ASTNode *expr = this->getSymbol(*(id->id));
     if (expr == NULL) {
-        std::cout << "symbol '" << *(id->id) << "' has not been defined" << std::endl;
+        std::cerr << "symbol '" << *(id->id) << "' has not been defined" << std::endl;
+        this->error = true;
     } else {
         expr->accept(this);
     }
@@ -114,11 +115,9 @@ void EvalVisitor::visit(DefNode *node) {
 }
 
 void EvalVisitor::visit(ParamsNode *node) {
-    cout << "a param node!" << endl;
 }
 
 void EvalVisitor::visit(ArgsNode *node) {
-    cout << "an args node!" << endl;
 }
 
 void EvalVisitor::visit(CallNode *node) {
@@ -126,17 +125,19 @@ void EvalVisitor::visit(CallNode *node) {
     std::map<std::string, ASTNode*> prevScope;
 
     if (this->funcDefs.find(*(node->id->id)) == this->funcDefs.end()) {
-        std::cout << "function '" << *(node->id->id)
+        std::cerr << "function '" << *(node->id->id)
                   <<"' has not been defined" << std::endl;
+        this->error = true;
         return;
     }
 
     function func = this->funcDefs[*(node->id->id)];
     if (func.args->args.size() != node->args->args.size()) {
-        std::cout << "function '" << *(node->id->id) <<"' expected "
+        std::cerr << "function '" << *(node->id->id) <<"' expected "
                   << func.args->args.size() << " arguments, got "
                   << node->args->args.size()
                   << " instead." << std::endl;
+        this->error = true;
         return;
     }
 
