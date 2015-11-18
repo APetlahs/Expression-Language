@@ -54,7 +54,8 @@ void EvalVisitor::visit(BinExprNode *node) {
             this->curVal = pow(lhs, rhs);
             break;
         default:
-            this->curVal = 9999;
+            std::cerr << "Unknown Operator" << std::endl;
+            this->error = true;
     }
 }
 
@@ -76,7 +77,8 @@ void EvalVisitor::visit(IdNode *id) {
     this->isPrintable = true;
     ASTNode *expr = this->getSymbol(*(id->id));
     if (expr == NULL) {
-        std::cerr << "symbol '" << *(id->id) << "' has not been defined" << std::endl;
+        std::cerr << "symbol '" << *(id->id)
+                  << "' has not been defined" << std::endl;
         this->error = true;
     } else {
         expr->accept(this);
@@ -96,6 +98,9 @@ void EvalVisitor::visit(BlockNode *node) {
     for (std::vector<StmtNode*>::iterator i = node->stmts.begin(); i != node->stmts.end(); ++i)
     {
         (*i)->accept(this);
+        if (this->error) {
+            break;
+        }
         if (this->isPrintable) {
             std::cout << this->curVal << std::endl;
         }

@@ -19,6 +19,6 @@ int main(int argc, char **argv) {
     programNode->deleteAll();
     delete programNode;
 
-    if (error) return 1;
+    if (error) return 2;
     return 0;
 }

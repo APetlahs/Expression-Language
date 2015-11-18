@@ -22,7 +22,8 @@ private:
 public:
     bool error;
 
-    EvalVisitor(): symbols(), funcDefs(), curVal(0), isPrintable(false) {}
+    EvalVisitor(): symbols(), funcDefs(), curVal(0),
+                   isPrintable(false), error(false) {}
     void addSymbol(const std::string &sym, ASTNode *val);
     ast::ASTNode *getSymbol(const std::string &sym);
     double evalExpr(ExprNode *expr);
